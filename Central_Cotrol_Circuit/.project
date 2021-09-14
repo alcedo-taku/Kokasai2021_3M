@@ -30,4 +30,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>DFRobotDFPlayerMini</name>
+			<type>2</type>
+			<location>C:/user_file/STM32CubeIDE_workspase/2021_kosenrobocon/Kokasai2021_3M/DFRobotDFPlayerMini</location>
+		</link>
+	</linkedResources>
 </projectDescription>

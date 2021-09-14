@@ -1,0 +1,3 @@
+[submodule "DFRobotDFPlayerMini"]
+	path = DFRobotDFPlayerMini
+	url = https://gitlab.com/takuji.coroton.thanks/dfrobotdfplayermini.git

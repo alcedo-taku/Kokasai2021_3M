@@ -1,6 +1,7 @@
 #include "wrapper.hpp"
 
 /* Include Begin */
+#include "DFRobotDFPlayerMini.h"
 /* Include End */
 
 /* Enum Begin */

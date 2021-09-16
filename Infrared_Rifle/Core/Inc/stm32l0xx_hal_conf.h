@@ -50,7 +50,7 @@
 /*#define HAL_RNG_MODULE_ENABLED   */
 /*#define HAL_RTC_MODULE_ENABLED   */
 /*#define HAL_SPI_MODULE_ENABLED   */
-/*#define HAL_TIM_MODULE_ENABLED   */
+#define HAL_TIM_MODULE_ENABLED
 /*#define HAL_TSC_MODULE_ENABLED   */
 #define HAL_UART_MODULE_ENABLED
 /*#define HAL_USART_MODULE_ENABLED   */
@@ -59,8 +59,8 @@
 /*#define HAL_SMBUS_MODULE_ENABLED   */
 /*#define HAL_WWDG_MODULE_ENABLED   */
 /*#define HAL_PCD_MODULE_ENABLED   */
-/*#define HAL_EXTI_MODULE_ENABLED   */
 #define HAL_GPIO_MODULE_ENABLED
+#define HAL_EXTI_MODULE_ENABLED
 #define HAL_DMA_MODULE_ENABLED
 #define HAL_I2C_MODULE_ENABLED
 #define HAL_RCC_MODULE_ENABLED
@@ -148,6 +148,35 @@
   *        HAL drivers code
   */
 /* #define USE_FULL_ASSERT    1U */
+
+/* ################## Register callback feature configuration ############### */
+/**
+  * @brief Set below the peripheral configuration  to "1U" to add the support
+  *        of HAL callback registration/deregistration feature for the HAL
+  *        driver(s). This allows user application to provide specific callback
+  *        functions thanks to HAL_PPP_RegisterCallback() rather than overwriting
+  *        the default weak callback functions (see each stm32l0xx_hal_ppp.h file
+  *        for possible callback identifiers defined in HAL_PPP_CallbackIDTypeDef
+  *        for each PPP peripheral).
+  */
+#define USE_HAL_ADC_REGISTER_CALLBACKS        0U
+#define USE_HAL_COMP_REGISTER_CALLBACKS       0U
+#define USE_HAL_DAC_REGISTER_CALLBACKS        0U
+#define USE_HAL_I2C_REGISTER_CALLBACKS        0U
+#define USE_HAL_I2S_REGISTER_CALLBACKS        0U
+#define USE_HAL_IRDA_REGISTER_CALLBACKS       0U
+#define USE_HAL_LPTIM_REGISTER_CALLBACKS      0U
+#define USE_HAL_PCD_REGISTER_CALLBACKS        0U
+#define USE_HAL_RNG_REGISTER_CALLBACKS        0U
+#define USE_HAL_RTC_REGISTER_CALLBACKS        0U
+#define USE_HAL_SMARTCARD_REGISTER_CALLBACKS  0U
+#define USE_HAL_SMBUS_REGISTER_CALLBACKS      0U
+#define USE_HAL_SPI_REGISTER_CALLBACKS        0U
+#define USE_HAL_TIM_REGISTER_CALLBACKS        0U
+#define USE_HAL_TSC_REGISTER_CALLBACKS        0U
+#define USE_HAL_UART_REGISTER_CALLBACKS       0U
+#define USE_HAL_USART_REGISTER_CALLBACKS      0U
+#define USE_HAL_WWDG_REGISTER_CALLBACKS       0U
 
 /* Includes ------------------------------------------------------------------*/
 /**

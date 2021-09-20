@@ -12,7 +12,7 @@
 /* Struct End */
 
 /* Variable Begin */
-const uint8_t rifle_id = 0;
+const uint8_t rifle_id = 3;
 /* Variable End */
 
 /* Class Constructor Begin */
@@ -26,11 +26,12 @@ void init(void){
 }
 
 void loop(void){
-	if( HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9) ){
+	if( HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14) == GPIO_PIN_RESET ){
 		HAL_UART_Transmit(&huart2, (uint8_t *)&rifle_id, sizeof(rifle_id), 500);
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+	}else{
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 	}
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 }
 
 /* Function Body Begin */

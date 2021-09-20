@@ -58,8 +58,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define trigger_Pin GPIO_PIN_9
-#define trigger_GPIO_Port GPIOB
+#define Trigger_Pin GPIO_PIN_14
+#define Trigger_GPIO_Port GPIOC
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

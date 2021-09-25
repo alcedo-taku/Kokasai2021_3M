@@ -36,5 +36,10 @@
 			<type>2</type>
 			<location>C:/user_file/STM32CubeIDE_workspase/2021/kokasai2021_3m/DFRobotDFPlayerMini</location>
 		</link>
+		<link>
+			<name>LED_Driver TM1640</name>
+			<type>2</type>
+			<location>C:/user_file/STM32CubeIDE_workspase/2021/kokasai2021_3m/LED_Driver TM1640</location>
+		</link>
 	</linkedResources>
 </projectDescription>

@@ -1,3 +1,6 @@
 [submodule "DFRobotDFPlayerMini"]
 	path = DFRobotDFPlayerMini
 	url = https://gitlab.com/takuji.coroton.thanks/dfrobotdfplayermini.git
+[submodule "LED_Driver TM1640"]
+	path = LED_Driver TM1640
+	url = https://gitlab.com/takuji.coroton.thanks/led_driver-tm1640.git

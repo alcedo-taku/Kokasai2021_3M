@@ -65,15 +65,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     	}else{
     		if(HAL_GPIO_ReadPin(uart_test.GPIOx, uart_test.GPIO_Pin) == GPIO_PIN_SET){ // ストップビット
         		uart_step = -1; // 段階を初期化
-    //    		score[target[0]] += SCORE_OF_TARGET[0];
-        		uart_success++;
-        		target_debug = target[0];
-        		if(target[0] == 3){
-        			HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-        		}else{
-        			HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+        		if(uart_step == 8){
+		//    		score[target[0]] += SCORE_OF_TARGET[0];
+					uart_success++;
+					target_debug = target[0];
+					if(target[0] == 3){
+						HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+					}else{
+						HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+					}
         		}
     		}else{
+    			uart_step = -2;
     		}
     	}
     }

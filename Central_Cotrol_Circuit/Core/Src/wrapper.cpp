@@ -6,6 +6,7 @@
 #include "gpio.h"
 #include "tim.h"
 #include <array>
+#include <bitset>
 /* Include End */
 
 /* Enum Begin */
@@ -62,7 +63,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     			target[0] |= (1<<uart_step);
     		}
     		uart_step++;
-    	}else if(uart_step == 8){
+    	}else if(uart_step == 8){ // parity even(偶数)
+    		if( ( std::bitset<8>(target[0]).count() + (uint8_t)HAL_GPIO_ReadPin(uart_test.GPIOx, uart_test.GPIO_Pin) )%2 ){ // 1のビットの合計個数が奇数個だったら
+    			uart_step = -2;
+    		}else{ // 1のビットの合計個数が偶数個だったら
+    			uart_step++;
+    		}
+    	}else if(uart_step == 9){
     		uart_step++;
     		if(HAL_GPIO_ReadPin(uart_test.GPIOx, uart_test.GPIO_Pin) == GPIO_PIN_SET){ // ストップビット
         		uart_step = -1; // 段階を初期化

@@ -62,19 +62,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     			target[0] |= (1<<uart_step);
     		}
     		uart_step++;
-    	}else{
+    	}else if(uart_step == 8){
+    		uart_step++;
     		if(HAL_GPIO_ReadPin(uart_test.GPIOx, uart_test.GPIO_Pin) == GPIO_PIN_SET){ // ストップビット
         		uart_step = -1; // 段階を初期化
-        		if(uart_step == 8){
-		//    		score[target[0]] += SCORE_OF_TARGET[0];
-					uart_success++;
-					target_debug = target[0];
-					if(target[0] == 3){
-						HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-					}else{
-						HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-					}
+	//    		score[target[0]] += SCORE_OF_TARGET[0];
+				uart_success++;
+				target_debug = target[0];
+				if(target[0] == 3){
+					HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+				}else{
+					HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
         		}
+    		}
+    	}else{ // 立下りエッジを見るための処理
+    		if(HAL_GPIO_ReadPin(uart_test.GPIOx, uart_test.GPIO_Pin) == GPIO_PIN_SET){
+    			uart_step = -1;
     		}else{
     			uart_step = -2;
     		}

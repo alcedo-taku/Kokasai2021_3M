@@ -83,14 +83,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 #endif
     		}
     		uart_step++;
-    	}else{ // ストップビット
+    	}else if(uart_step == 9){ // ストップビット
 #if !debug
     		HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1); // パルスを止める
 #else
     		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 #endif
-    		uart_step = -1; // 段階を初期化
+    		uart_step = -5; // 段階を初期化
     		HAL_TIM_Base_Stop_IT(&htim2); // タイマー割込みを止める
+    	}else{
+    		uart_step++;
     	}
     }
 }

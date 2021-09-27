@@ -36,6 +36,7 @@ void MX_TIM2_Init(void)
   /* USER CODE END TIM2_Init 0 */
 
   TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
@@ -43,16 +44,24 @@ void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 15;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 65535;
+  htim2.Init.Period = 1666;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_OnePulse_Init(&htim2, TIM_OPMODE_SINGLE) != HAL_OK)
+  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
   }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -106,10 +115,10 @@ void MX_TIM21_Init(void)
 
 }
 
-void HAL_TIM_OnePulse_MspInit(TIM_HandleTypeDef* tim_onepulseHandle)
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle)
 {
 
-  if(tim_onepulseHandle->Instance==TIM2)
+  if(tim_pwmHandle->Instance==TIM2)
   {
   /* USER CODE BEGIN TIM2_MspInit 0 */
 
@@ -124,12 +133,7 @@ void HAL_TIM_OnePulse_MspInit(TIM_HandleTypeDef* tim_onepulseHandle)
 
   /* USER CODE END TIM2_MspInit 1 */
   }
-}
-
-void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim_pwmHandle)
-{
-
-  if(tim_pwmHandle->Instance==TIM21)
+  else if(tim_pwmHandle->Instance==TIM21)
   {
   /* USER CODE BEGIN TIM21_MspInit 0 */
 
@@ -169,10 +173,10 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* timHandle)
 
 }
 
-void HAL_TIM_OnePulse_MspDeInit(TIM_HandleTypeDef* tim_onepulseHandle)
+void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* tim_pwmHandle)
 {
 
-  if(tim_onepulseHandle->Instance==TIM2)
+  if(tim_pwmHandle->Instance==TIM2)
   {
   /* USER CODE BEGIN TIM2_MspDeInit 0 */
 
@@ -186,12 +190,7 @@ void HAL_TIM_OnePulse_MspDeInit(TIM_HandleTypeDef* tim_onepulseHandle)
 
   /* USER CODE END TIM2_MspDeInit 1 */
   }
-}
-
-void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* tim_pwmHandle)
-{
-
-  if(tim_pwmHandle->Instance==TIM21)
+  else if(tim_pwmHandle->Instance==TIM21)
   {
   /* USER CODE BEGIN TIM21_MspDeInit 0 */
 

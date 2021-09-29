@@ -52,17 +52,28 @@ void loop(void){
 /* Function Body Begin */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if(htim == &htim17){
-//   	target[0] |= (uint8_t)HAL_GPIO_ReadPin(uart_test.GPIOx, uart_test.GPIO_Pin) << uart_step;
+    	static uint8_t received_success_count = 0;
+
+    	received_success_count--;
+    	if(received_success_count == 0)
+    		received_success_count = 0;
+
     	uart_by_gpio.call_with_timer_interrupt();
     	if(uart_by_gpio.is_successful_reception()){
-//    		score[target[0]] += SCORE_OF_TARGET[0];
-			uart_success++;
+    		static uint8_t prev_target;
 			target_debug = target[0];
-			if(target[0] == 3){
-				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-			}else{
-				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+			if(0 <= target[0] && target[0] <=3){ // 受信値が銃のIDだったら
+				received_success_count += 10*100; // 受信成功カウントを上げる
 			}
+    	}
+    	if(10*1000 < received_success_count){ // 受信成功カウントが一定値を超えたら
+			score[target[0]] += SCORE_OF_TARGET[0]; // その時のIDに得点を入れる
+    	}
+
+    	if(target[0] == 3){
+    		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+    	}else{
+    		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
     	}
     }
 }

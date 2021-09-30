@@ -9,19 +9,26 @@
 #include <bitset>
 /* Include End */
 
-#define DEBUG 0
+#define ENABLE_DEBUG 0
 #define ORIGINAL_UART 0
 
 /* Enum Begin */
 /* Enum End */
 
 /* Struct Begin */
+struct GPIO{
+	GPIO_TypeDef * GPIOx;
+	uint16_t GPIO_Pin;
+};
+GPIO indicator_LED[5] = { {GPIOA, GPIO_PIN_7}, {GPIOA, GPIO_PIN_4}, {GPIOA, GPIO_PIN_1}, {GPIOA, GPIO_PIN_0}, {GPIOC, GPIO_PIN_15} };
 /* Struct End */
 
 /* Variable Begin */
 constexpr uint8_t rifle_id = 3;
 //const uint8_t number_of_high_bits = std::bitset<8>(rifle_id).count();
 constexpr uint8_t number_of_high_bits = 2;
+uint16_t number_of_bullets_remaining = 0;
+constexpr uint16_t NUMBER_OF_BULLETS = 1000;
 /* Variable End */
 
 /* Class Constructor Begin */
@@ -31,11 +38,14 @@ constexpr uint8_t number_of_high_bits = 2;
 /* Function Prototype End */
 
 void init(void){
-#if !DEBUG
+#if !ENABLE_DEBUG
 	__HAL_TIM_SET_COMPARE(&htim21, TIM_CHANNEL_1, 421); // PWMを使った赤外線通信 送信
 #else
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET); // GPIOを使ったUART 送信
 #endif
+	for(uint8_t i=0; 5<i; i++){
+		HAL_GPIO_WritePin(indicator_LED[i].GPIOx, indicator_LED[i].GPIO_Pin, GPIO_PIN_SET);
+	}
 }
 
 void loop(void){
@@ -52,7 +62,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if(htim == &htim2){
     	static int8_t uart_step = -1;
     	if(uart_step == -1){ // スタートビット
-#if !DEBUG
+#if !ENABLE_DEBUG
     		HAL_TIM_PWM_Start(&htim21, TIM_CHANNEL_1); // パルスを出す
 #else
     		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
@@ -60,13 +70,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     		uart_step++;
     	}else if(0 <= uart_step && uart_step <= 7){ // データﾋﾞｯﾄ
     		if( ( rifle_id&(1<<uart_step) ) >> uart_step == 0){ // 送信ﾋﾞｯﾄが0だったら
-#if !DEBUG
+#if !ENABLE_DEBUG
     			HAL_TIM_PWM_Start(&htim21, TIM_CHANNEL_1); // パルスを出す
 #else
     			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 #endif
     		}else{ // 送信ﾋﾞｯﾄが1だったら
-#if !DEBUG
+#if !ENABLE_DEBUG
     			HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1); // パルスを止める
 #else
     			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
@@ -75,13 +85,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     		uart_step++;
     	}else if(uart_step == 8){ // parity even(偶数)
     		if( number_of_high_bits%2 ){ // 1のﾋﾞｯﾄが奇数個だったら
-#if !DEBUG
+#if !ENABLE_DEBUG
     			HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1); // パルスを止める
 #else
     			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 #endif
     		}else{ // 1のﾋﾞｯﾄが偶数個だったら
-#if !DEBUG
+#if !ENABLE_DEBUG
     			HAL_TIM_PWM_Start(&htim21, TIM_CHANNEL_1); // パルスを出す
 #else
     			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
@@ -89,16 +99,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     		}
     		uart_step++;
     	}else if(uart_step == 9){ // ストップビット
-#if !DEBUG
+#if !ENABLE_DEBUG
     		HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1); // パルスを止める
 #else
     		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 #endif
     		uart_step = -5; // 段階を初期化
+    		number_of_bullets_remaining++;
     		HAL_TIM_Base_Stop_IT(&htim2); // タイマー割込みを止める
     	}else{
     		uart_step++;
     	}
+
+    	// 残り弾数のインジゲータ
+		if(NUMBER_OF_BULLETS*5/5.0 < number_of_bullets_remaining){
+			HAL_GPIO_WritePin(indicator_LED[4].GPIOx, indicator_LED[4].GPIO_Pin, GPIO_PIN_RESET);
+		}else if(NUMBER_OF_BULLETS*4/5.0 < number_of_bullets_remaining){
+			HAL_GPIO_WritePin(indicator_LED[3].GPIOx, indicator_LED[3].GPIO_Pin, GPIO_PIN_RESET);
+		}else if(NUMBER_OF_BULLETS*3/5.0 < number_of_bullets_remaining){
+			HAL_GPIO_WritePin(indicator_LED[2].GPIOx, indicator_LED[2].GPIO_Pin, GPIO_PIN_RESET);
+		}else if(NUMBER_OF_BULLETS*2/5.0 < number_of_bullets_remaining){
+			HAL_GPIO_WritePin(indicator_LED[1].GPIOx, indicator_LED[1].GPIO_Pin, GPIO_PIN_RESET);
+		}else if(NUMBER_OF_BULLETS*1/5.0 < number_of_bullets_remaining){
+			HAL_GPIO_WritePin(indicator_LED[0].GPIOx, indicator_LED[0].GPIO_Pin, GPIO_PIN_RESET);
+		}
     }
 }
 /* Function Body End */

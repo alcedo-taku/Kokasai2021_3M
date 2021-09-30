@@ -4,3 +4,6 @@
 [submodule "LED_Driver TM1640"]
 	path = LED_Driver TM1640
 	url = https://gitlab.com/takuji.coroton.thanks/led_driver-tm1640.git
+[submodule "LowLayerExtension"]
+	path = LowLayerExtension
+	url = https://gitlab.com/grcc/library/develop/lowlayerextension.git

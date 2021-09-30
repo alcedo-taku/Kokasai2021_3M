@@ -41,5 +41,10 @@
 			<type>2</type>
 			<location>C:/user_file/STM32CubeIDE_workspase/2021/kokasai2021_3m/LED_Driver TM1640</location>
 		</link>
+		<link>
+			<name>LowLayerExtension</name>
+			<type>2</type>
+			<location>C:/user_file/STM32CubeIDE_workspase/2021/kokasai2021_3m/LowLayerExtension</location>
+		</link>
 	</linkedResources>
 </projectDescription>

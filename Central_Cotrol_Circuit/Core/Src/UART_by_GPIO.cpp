@@ -2,17 +2,26 @@
  * UART_by_GPIO.cpp
  *
  *  Created on: 2021/09/29
- *      Author: takuj
+ *      Author: taku
  */
 
 #include "UART_by_GPIO.hpp"
 
-UART_by_GPIO::UART_by_GPIO(uint8_t &data, GPIO_TypeDef * GPIOx, uint16_t GPIO_Pin):
+UART_by_GPIO::UART_by_GPIO(){
+
+}
+
+UART_by_GPIO::UART_by_GPIO(GPIO_TypeDef * GPIOx, uint16_t GPIO_Pin):
 	data(data),
 	GPIOx(GPIOx),
 	GPIO_Pin(GPIO_Pin)
 {
+}
 
+void UART_by_GPIO::init(GPIO_TypeDef * GPIOx, uint16_t GPIO_Pin){
+	this->data = data;
+	this->GPIOx = GPIOx;
+	this->GPIO_Pin = GPIO_Pin;
 }
 
 void UART_by_GPIO::call_with_timer_interrupt(){
@@ -53,4 +62,8 @@ void UART_by_GPIO::call_with_timer_interrupt(){
 
 bool UART_by_GPIO::is_successful_reception(){
 	return successful_reception;
+}
+
+uint8_t UART_by_GPIO::get_data(){
+	return data;
 }

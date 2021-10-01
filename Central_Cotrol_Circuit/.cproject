@@ -74,7 +74,6 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/Kokasai2021_3M/DFRobotDFPlayerMini&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/Kokasai2021_3M/LED_Driver TM1640&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/Kokasai2021_3M/LowLayerExtension&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp.1175996581" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.input.cpp"/>
 							</tool>
@@ -108,7 +107,6 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="DFRobotDFPlayerMini"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LED_Driver TM1640"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LowLayerExtension"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

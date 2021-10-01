@@ -68,37 +68,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 #endif
     		uart_step++;
-    	}else if(0 <= uart_step && uart_step <= 7){ // データﾋﾞｯﾄ
-    		if( ( rifle_id&(1<<uart_step) ) >> uart_step == 0){ // 送信ﾋﾞｯﾄが0だったら
+    	}
+    	else if(0 <= uart_step && uart_step <= 7){ // データﾋﾞｯﾄ
 #if !ENABLE_DEBUG
-    			HAL_TIM_PWM_Start(&htim21, TIM_CHANNEL_1); // パルスを出す
+    		( rifle_id&(1<<uart_step) ) >> uart_step ? // 送信ﾋﾞｯﾄが
+    				HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1): // 1ならパルスを止める
+					HAL_TIM_PWM_Start(&htim21, TIM_CHANNEL_1); // 0ならパルスを出す
 #else
-    			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+    		( rifle_id&(1<<uart_step) ) >> uart_step ? // 送信ﾋﾞｯﾄが
+    				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET):
+					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 #endif
-    		}else{ // 送信ﾋﾞｯﾄが1だったら
-#if !ENABLE_DEBUG
-    			HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1); // パルスを止める
-#else
-    			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-#endif
-    		}
     		uart_step++;
-    	}else if(uart_step == 8){ // parity even(偶数)
-    		if( number_of_high_bits%2 ){ // 1のﾋﾞｯﾄが奇数個だったら
+    	}
+    	else if(uart_step == 8){ // parity even(偶数)
 #if !ENABLE_DEBUG
-    			HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1); // パルスを止める
+    		number_of_high_bits%2 ? // 1のﾋﾞｯﾄが
+    				HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1): // 奇数個ならパルスを止める
+					HAL_TIM_PWM_Start(&htim21, TIM_CHANNEL_1); // 偶数個ならパルスを出す
 #else
-    			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+    		number_of_high_bits%2 ? // 1のﾋﾞｯﾄが
+    				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET): // 奇数個なら
+					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET); // 偶数個なら
 #endif
-    		}else{ // 1のﾋﾞｯﾄが偶数個だったら
-#if !ENABLE_DEBUG
-    			HAL_TIM_PWM_Start(&htim21, TIM_CHANNEL_1); // パルスを出す
-#else
-    			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-#endif
-    		}
     		uart_step++;
-    	}else if(uart_step == 9){ // ストップビット
+    	}
+    	else if(uart_step == 9){ // ストップビット
 #if !ENABLE_DEBUG
     		HAL_TIM_PWM_Stop(&htim21, TIM_CHANNEL_1); // パルスを止める
 #else
@@ -107,7 +102,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     		uart_step = -5; // 段階を初期化
     		number_of_bullets_remaining++;
     		HAL_TIM_Base_Stop_IT(&htim2); // タイマー割込みを止める
-    	}else{
+    	}
+    	else{
     		uart_step++;
     	}
 

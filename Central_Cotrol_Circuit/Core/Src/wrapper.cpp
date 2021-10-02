@@ -57,7 +57,7 @@ std::array<UART_by_GPIO,NUMBER_OF_TARGET> uart_by_gpio = {UART_by_GPIO(), UART_b
 /* Function Prototype End */
 
 void init(void){
-//	DFPlayerMini.begin(&huart2, false, false);
+//	DFPlayerMini.begin(&huart1, false, false);
 //	DFPlayerMini.next();
 //	DFPlayerMini.Send_cmd(0x01, 0x00, 0x00);
 	HAL_TIM_Base_Start_IT(&htim17);

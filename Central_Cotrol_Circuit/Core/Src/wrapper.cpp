@@ -3,6 +3,7 @@
 /* Include Begin */
 #include "DFRobotDFPlayerMini.hpp"
 #include "UART_by_GPIO.hpp"
+#include "TM1640.h"
 #include "usart.h"
 #include "gpio.h"
 #include "tim.h"
@@ -16,32 +17,46 @@ constexpr uint8_t NUMBER_OF_TARGET = 15;
 /* Enum End */
 
 /* Struct Begin */
-struct GPIO{
-	GPIO_TypeDef * GPIOx;
-	uint16_t GPIO_Pin;
-};
+//struct GPIO{
+//	GPIO_TypeDef * GPIOx;
+//	uint16_t GPIO_Pin;
+//};
 GPIO uart_test = {GPIOB, GPIO_PIN_3};
-constexpr std::array<GPIO,NUMBER_OF_TARGET> uart_pin = {
-		GPIO{GPIOA, GPIO_PIN_3},
-		GPIO{GPIOA, GPIO_PIN_2},
-		GPIO{GPIOA, GPIO_PIN_10},
-		GPIO{GPIOB, GPIO_PIN_3},
-		GPIO{GPIOB, GPIO_PIN_5},
+
+constexpr std::array<GPIO, NUMBER_OF_TARGET> led_pin = {
+		GPIO{GPIOC, GPIO_PIN_2},
+		GPIO{GPIOA, GPIO_PIN_0},
+		GPIO{GPIOA, GPIO_PIN_4},
+		GPIO{GPIOC, GPIO_PIN_1},
+		GPIO{GPIOA, GPIO_PIN_7},
+		GPIO{GPIOC, GPIO_PIN_7},
+		GPIO{GPIOA, GPIO_PIN_8},
 		GPIO{GPIOB, GPIO_PIN_4},
-		GPIO{GPIOB, GPIO_PIN_13},
-		GPIO{GPIOB, GPIO_PIN_14},
-		GPIO{GPIOB, GPIO_PIN_15},
-		GPIO{GPIOB, GPIO_PIN_1},
-		GPIO{GPIOB, GPIO_PIN_2},
-		GPIO{GPIOB, GPIO_PIN_11},
-		GPIO{GPIOB, GPIO_PIN_12},
-		GPIO{GPIOA, GPIO_PIN_11},
+		GPIO{GPIOB, GPIO_PIN_3},
+		GPIO{GPIOA, GPIO_PIN_2},
+		GPIO{GPIOC, GPIO_PIN_8},
 		GPIO{GPIOA, GPIO_PIN_12},
+		GPIO{GPIOB, GPIO_PIN_12},
+		GPIO{GPIOB, GPIO_PIN_1},
+		GPIO{GPIOB, GPIO_PIN_14}
 };
 
-constexpr std::array<GPIO,2> led_pin = {
+constexpr std::array<GPIO, NUMBER_OF_TARGET> uart_pin = {
+		GPIO{GPIOC, GPIO_PIN_3},
+		GPIO{GPIOA, GPIO_PIN_1},
+		GPIO{GPIOB, GPIO_PIN_0},
+		GPIO{GPIOC, GPIO_PIN_0},
+		GPIO{GPIOB, GPIO_PIN_6},
+		GPIO{GPIOA, GPIO_PIN_9},
 		GPIO{GPIOB, GPIO_PIN_10},
-		GPIO{GPIOA, GPIO_PIN_8},
+		GPIO{GPIOB, GPIO_PIN_5},
+		GPIO{GPIOA, GPIO_PIN_10},
+		GPIO{GPIOA, GPIO_PIN_3},
+		GPIO{GPIOC, GPIO_PIN_6},
+		GPIO{GPIOA, GPIO_PIN_11},
+		GPIO{GPIOB, GPIO_PIN_11},
+		GPIO{GPIOB, GPIO_PIN_15},
+		GPIO{GPIOB, GPIO_PIN_13}
 };
 
 /* Struct End */

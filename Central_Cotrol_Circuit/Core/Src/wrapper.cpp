@@ -91,6 +91,7 @@ void init(void){
 	tm1640.setDisplayToDecNumber(52,0);
 //	tm1640.setDisplayToString("HALOHALOHALOHALO");
 	HAL_TIM_Base_Start_IT(&htim17);
+	HAL_TIM_Base_Start_IT(&htim16);
 }
 
 void loop(void){
@@ -134,8 +135,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     else if(htim == &htim16){ // 4Hz
     	// 的に当たった時、LEDを点滅させる
     	for(uint8_t i=0; i<NUMBER_OF_TARGET; i++){ // 的の数だけループ
-        	if(led_blinking_count[i] < 4){
-        		HAL_GPIO_TogglePin(led_pin[i].GPIOx, led_pin[i].GPIO_Pin);
+        	if(led_blinking_count[i] == 0){
+        		HAL_GPIO_WritePin(led_pin[i].GPIOx, led_pin[i].GPIO_Pin, GPIO_PIN_SET);
+        		led_blinking_count[i]++;
+        	}else if(led_blinking_count[i] == 1){
+        		HAL_GPIO_WritePin(led_pin[i].GPIOx, led_pin[i].GPIO_Pin, GPIO_PIN_RESET);
         		led_blinking_count[i]++;
         	}
     	}

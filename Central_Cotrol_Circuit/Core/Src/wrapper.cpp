@@ -3,7 +3,7 @@
 /* Include Begin */
 #include "DFRobotDFPlayerMini.hpp"
 #include "UART_by_GPIO.hpp"
-#include "TM1640.h"
+#include <TM1640.hpp>
 #include "usart.h"
 #include "gpio.h"
 #include "tim.h"
@@ -59,6 +59,9 @@ constexpr std::array<GPIO, NUMBER_OF_TARGET> uart_pin = {
 		GPIO{GPIOB, GPIO_PIN_13}
 };
 
+GPIO clockPin = {GPIOC, GPIO_PIN_9};
+GPIO dataPin  = {GPIOB, GPIO_PIN_8};
+
 /* Struct End */
 
 /* Variable Begin */
@@ -71,6 +74,7 @@ std::array<uint8_t,NUMBER_OF_TARGET> led_blinking_count; // LEDの点滅回数�
 /* Class Constructor Begin */
 DFRobotDFPlayerMini DFPlayerMini;
 std::array<UART_by_GPIO,NUMBER_OF_TARGET> uart_by_gpio = {UART_by_GPIO(), UART_by_GPIO()};
+TM1640 tm1640(dataPin, clockPin, 8);
 /* Class Constructor End */
 
 /* Function Prototype Begin */
@@ -80,10 +84,13 @@ void init(void){
 //	DFPlayerMini.begin(&huart1, false, false);
 //	DFPlayerMini.next();
 //	DFPlayerMini.Send_cmd(0x01, 0x00, 0x00);
-	HAL_TIM_Base_Start_IT(&htim17);
 	for(uint8_t i=0; NUMBER_OF_TARGET<i; i++){
 		uart_by_gpio[i].init(uart_pin[i].GPIOx, uart_pin[i].GPIO_Pin);
 	}
+	tm1640.init();
+	tm1640.setDisplayToDecNumber(52,0);
+//	tm1640.setDisplayToString("HALOHALOHALOHALO");
+	HAL_TIM_Base_Start_IT(&htim17);
 }
 
 void loop(void){
@@ -109,16 +116,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
         	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
     			score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
+    			tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
     			led_blinking_count[i] = 0;
         	}
     	}
 
     	// Debug用
-    	if(uart_by_gpio[0].get_data() == 3){
+    	if(uart_by_gpio[9].get_data() == 3){
     		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     	}else{
     		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
     	}
+
+    	tm1640.setupDisplay(true, 7); // 毎回これやってあげないと、光らないみたい　仕様では光ると思うんだけどなぁ...
     }
     else if(htim == &htim16){ // 4Hz
     	// 的に当たった時、LEDを点滅させる

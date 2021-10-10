@@ -81,9 +81,7 @@ TM1640 tm1640(dataPin, clockPin, 8);
 /* Function Prototype End */
 
 void init(void){
-//	DFPlayerMini.begin(&huart1, false, false);
-//	DFPlayerMini.next();
-//	DFPlayerMini.Send_cmd(0x01, 0x00, 0x00);
+	DFPlayerMini.begin(&huart1, false, false);
 	for(uint8_t i=0; i<NUMBER_OF_TARGET; i++){
 		uart_by_gpio[i].init(uart_pin[i].GPIOx, uart_pin[i].GPIO_Pin);
 	}
@@ -115,6 +113,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     	        	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
     	        		score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
     	    			tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
+    	    			//	DFPlayerMini.next();
+    	    			//	DFPlayerMini.Send_cmd(0x01, 0x00, 0x00); // next
+    	    			DFPlayerMini.play(rand()%2);
     	    			led_blinking_count[i] = 0;
     	        	}
     			}

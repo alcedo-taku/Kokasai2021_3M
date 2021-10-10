@@ -27,8 +27,8 @@ GPIO indicator_LED[5] = { {GPIOA, GPIO_PIN_7}, {GPIOA, GPIO_PIN_4}, {GPIOA, GPIO
 constexpr uint8_t rifle_id = 3;
 //const uint8_t number_of_high_bits = std::bitset<8>(rifle_id).count();
 constexpr uint8_t number_of_high_bits = 2;
-uint16_t number_of_bullets_remaining = 0;
 constexpr uint16_t NUMBER_OF_BULLETS = 1000;
+uint16_t number_of_bullets_remaining = NUMBER_OF_BULLETS;
 /* Variable End */
 
 /* Class Constructor Begin */
@@ -49,7 +49,7 @@ void init(void){
 }
 
 void loop(void){
-	if( HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14) == GPIO_PIN_RESET ){
+	if( HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14) == GPIO_PIN_RESET && number_of_bullets_remaining != 0){
 #if ORIGINAL_UART
 		HAL_UART_Transmit(&huart2, (uint8_t *)&rifle_id, sizeof(rifle_id), 500);
 #endif
@@ -100,7 +100,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 #endif
     		uart_step = -5; // 段階を初期化
-    		number_of_bullets_remaining++;
+    		if(number_of_bullets_remaining != 0)
+    			number_of_bullets_remaining--;
     		HAL_TIM_Base_Stop_IT(&htim2); // タイマー割込みを止める
     	}
     	else{
@@ -108,15 +109,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     	}
 
     	// 残り弾数のインジゲータ
-		if(NUMBER_OF_BULLETS*5/5.0 < number_of_bullets_remaining){
+		if(number_of_bullets_remaining < NUMBER_OF_BULLETS*4/5.0){
 			HAL_GPIO_WritePin(indicator_LED[4].GPIOx, indicator_LED[4].GPIO_Pin, GPIO_PIN_RESET);
-		}else if(NUMBER_OF_BULLETS*4/5.0 < number_of_bullets_remaining){
+		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*3/5.0){
 			HAL_GPIO_WritePin(indicator_LED[3].GPIOx, indicator_LED[3].GPIO_Pin, GPIO_PIN_RESET);
-		}else if(NUMBER_OF_BULLETS*3/5.0 < number_of_bullets_remaining){
+		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*2/5.0){
 			HAL_GPIO_WritePin(indicator_LED[2].GPIOx, indicator_LED[2].GPIO_Pin, GPIO_PIN_RESET);
-		}else if(NUMBER_OF_BULLETS*2/5.0 < number_of_bullets_remaining){
+		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*1/5.0){
 			HAL_GPIO_WritePin(indicator_LED[1].GPIOx, indicator_LED[1].GPIO_Pin, GPIO_PIN_RESET);
-		}else if(NUMBER_OF_BULLETS*1/5.0 < number_of_bullets_remaining){
+		}else if(number_of_bullets_remaining == 0){
 			HAL_GPIO_WritePin(indicator_LED[0].GPIOx, indicator_LED[0].GPIO_Pin, GPIO_PIN_RESET);
 		}
     }

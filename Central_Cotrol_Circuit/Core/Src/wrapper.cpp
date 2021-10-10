@@ -95,12 +95,11 @@ void loop(void){
 /* Function Body Begin */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if(htim == &htim17){ // 1200Hz
-    	static std::array<uint16_t,NUMBER_OF_TARGET> received_success_count = {1};
+    	static std::array<uint16_t,NUMBER_OF_TARGET> received_success_count;
 
     	for(uint8_t i=0; i<NUMBER_OF_TARGET; i++){ // 的の数だけループ
-        	received_success_count[i]--; // 毎回、受信成功カウントを少しずつ減らす
-        	if(received_success_count[i] == 0) // アンダーフロー防止処理
-        		received_success_count[i] = 1;
+    		if(received_success_count[i] != 0)
+    			received_success_count[i]--; // 毎回、受信成功カウントを少しずつ減らす
 
         	uart_by_gpio[i].call_with_timer_interrupt();
         	if(uart_by_gpio[i].is_successful_reception()){ // もし通信に成功したら

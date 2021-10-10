@@ -59,7 +59,7 @@ void loop(void){
 
 /* Function Body Begin */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-    if(htim == &htim2){
+    if(htim == &htim2){ // 1200Hz
     	static int8_t uart_step = -1;
     	if(uart_step == -1){ // スタートビット
 #if !ENABLE_DEBUG

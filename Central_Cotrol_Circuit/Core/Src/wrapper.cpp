@@ -88,7 +88,6 @@ void init(void){
 		uart_by_gpio[i].init(uart_pin[i].GPIOx, uart_pin[i].GPIO_Pin);
 	}
 	tm1640.init();
-	tm1640.setDisplayToDecNumber(52,0);
 //	tm1640.setDisplayToString("HALOHALOHALOHALO");
 	HAL_TIM_Base_Start_IT(&htim17);
 	HAL_TIM_Base_Start_IT(&htim16);

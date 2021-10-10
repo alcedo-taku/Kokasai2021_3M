@@ -21,7 +21,6 @@ constexpr uint8_t NUMBER_OF_TARGET = 15;
 //	GPIO_TypeDef * GPIOx;
 //	uint16_t GPIO_Pin;
 //};
-GPIO uart_test = {GPIOB, GPIO_PIN_3};
 
 constexpr std::array<GPIO,NUMBER_OF_TARGET> uart_pin = {
 		GPIO{GPIOA, GPIO_PIN_3},
@@ -67,7 +66,6 @@ GPIO dataPin  = {GPIOB, GPIO_PIN_8};
 /* Variable Begin */
 std::array<uint8_t,4> score;
 constexpr std::array<uint8_t,NUMBER_OF_TARGET> SCORE_OF_TARGET = {1,1,1,1,1,1,1,1,1,1,1}; // 各的の点数
-uint8_t target_debug;
 std::array<uint8_t,NUMBER_OF_TARGET> led_blinking_count; // LEDの点滅回数をカウント
 /* Variable End */
 
@@ -106,7 +104,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
         	uart_by_gpio[i].call_with_timer_interrupt();
         	if(uart_by_gpio[i].is_successful_reception()){ // もし通信に成功したら
-    			target_debug = uart_by_gpio[i].get_data();
     			if(0 <= uart_by_gpio[i].get_data() && uart_by_gpio[i].get_data() <=3){ // 受信値が銃のIDだったら
     				received_success_count[i] += 10*100; // 受信成功カウントを増やす
 

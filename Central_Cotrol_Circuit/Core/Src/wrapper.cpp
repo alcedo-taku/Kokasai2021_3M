@@ -113,9 +113,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     	        	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
     	        		score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
     	    			tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
-    	    			//	DFPlayerMini.next();
-    	    			//	DFPlayerMini.Send_cmd(0x01, 0x00, 0x00); // next
-    	    			DFPlayerMini.play(rand()%2);
+//						DFPlayerMini.next();
+//						DFPlayerMini.Send_cmd(0x01, 0x00, 0x00); // next
+    	    			DFPlayerMini.play((rand()%2)+1);
     	    			led_blinking_count[i] = 0;
     	        	}
     			}
@@ -124,7 +124,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     	}
 
     	// Debug用
-    	if(uart_by_gpio[9].get_data() == 3){
+    	if(uart_by_gpio[0].get_data() == 3){
     		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     	}else{
     		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);

@@ -73,7 +73,7 @@ std::array<uint8_t,NUMBER_OF_TARGET> led_blinking_count; // LEDの点滅回数�
 
 /* Class Constructor Begin */
 DFRobotDFPlayerMini DFPlayerMini;
-std::array<UART_by_GPIO,NUMBER_OF_TARGET> uart_by_gpio = {UART_by_GPIO(), UART_by_GPIO()};
+std::array<UART_by_GPIO,NUMBER_OF_TARGET> uart_by_gpio = {UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO(), UART_by_GPIO()};
 TM1640 tm1640(dataPin, clockPin, 8);
 /* Class Constructor End */
 
@@ -84,7 +84,7 @@ void init(void){
 //	DFPlayerMini.begin(&huart1, false, false);
 //	DFPlayerMini.next();
 //	DFPlayerMini.Send_cmd(0x01, 0x00, 0x00);
-	for(uint8_t i=0; NUMBER_OF_TARGET<i; i++){
+	for(uint8_t i=0; i<NUMBER_OF_TARGET; i++){
 		uart_by_gpio[i].init(uart_pin[i].GPIOx, uart_pin[i].GPIO_Pin);
 	}
 	tm1640.init();
@@ -99,7 +99,7 @@ void loop(void){
 /* Function Body Begin */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if(htim == &htim17){ // 1200Hz
-    	static std::array<uint16_t,NUMBER_OF_TARGET> received_success_count = {0};
+    	static std::array<uint16_t,NUMBER_OF_TARGET> received_success_count = {1};
 
     	for(uint8_t i=0; i<NUMBER_OF_TARGET; i++){ // 的の数だけループ
         	received_success_count[i]--; // 毎回、受信成功カウントを少しずつ減らす
@@ -107,18 +107,19 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
         		received_success_count[i] = 1;
 
         	uart_by_gpio[i].call_with_timer_interrupt();
-        	if(uart_by_gpio[i].is_successful_reception()){
+        	if(uart_by_gpio[i].is_successful_reception()){ // もし通信に成功したら
     			target_debug = uart_by_gpio[i].get_data();
     			if(0 <= uart_by_gpio[i].get_data() && uart_by_gpio[i].get_data() <=3){ // 受信値が銃のIDだったら
     				received_success_count[i] += 10*100; // 受信成功カウントを増やす
+
+    	        	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
+    	        		score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
+    	    			tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
+    	    			led_blinking_count[i] = 0;
+    	        	}
     			}
         	}
 
-        	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
-    			score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
-    			tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
-    			led_blinking_count[i] = 0;
-        	}
     	}
 
     	// Debug用

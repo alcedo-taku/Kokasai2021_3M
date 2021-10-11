@@ -20,7 +20,13 @@ struct GPIO{
 	GPIO_TypeDef * GPIOx;
 	uint16_t GPIO_Pin;
 };
-GPIO indicator_LED[5] = { {GPIOA, GPIO_PIN_7}, {GPIOA, GPIO_PIN_4}, {GPIOA, GPIO_PIN_1}, {GPIOA, GPIO_PIN_0}, {GPIOC, GPIO_PIN_15} };
+GPIO indicator_LED[5] = {
+		GPIO{GPIOA, GPIO_PIN_7},
+		GPIO{GPIOA, GPIO_PIN_4},
+		GPIO{GPIOA, GPIO_PIN_1},
+		GPIO{GPIOA, GPIO_PIN_0},
+		GPIO{GPIOC, GPIO_PIN_15}
+};
 /* Struct End */
 
 /* Variable Begin */
@@ -43,7 +49,7 @@ void init(void){
 #else
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET); // GPIOを使ったUART 送信
 #endif
-	for(uint8_t i=0; 5<i; i++){
+	for(uint8_t i=0; i<5; i++){
 		HAL_GPIO_WritePin(indicator_LED[i].GPIOx, indicator_LED[i].GPIO_Pin, GPIO_PIN_SET);
 	}
 }
@@ -109,15 +115,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     	}
 
     	// 残り弾数のインジゲータ
-		if(number_of_bullets_remaining < NUMBER_OF_BULLETS*4/5.0){
+		if(number_of_bullets_remaining == 0){
 			HAL_GPIO_WritePin(indicator_LED[4].GPIOx, indicator_LED[4].GPIO_Pin, GPIO_PIN_RESET);
-		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*3/5.0){
+		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*1/5.0){
 			HAL_GPIO_WritePin(indicator_LED[3].GPIOx, indicator_LED[3].GPIO_Pin, GPIO_PIN_RESET);
 		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*2/5.0){
 			HAL_GPIO_WritePin(indicator_LED[2].GPIOx, indicator_LED[2].GPIO_Pin, GPIO_PIN_RESET);
-		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*1/5.0){
+		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*3/5.0){
 			HAL_GPIO_WritePin(indicator_LED[1].GPIOx, indicator_LED[1].GPIO_Pin, GPIO_PIN_RESET);
-		}else if(number_of_bullets_remaining == 0){
+		}else if(number_of_bullets_remaining < NUMBER_OF_BULLETS*4/5.0){
 			HAL_GPIO_WritePin(indicator_LED[0].GPIOx, indicator_LED[0].GPIO_Pin, GPIO_PIN_RESET);
 		}
     }

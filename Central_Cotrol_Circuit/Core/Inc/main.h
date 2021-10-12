@@ -68,6 +68,14 @@ void Error_Handler(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+#define reset00_Pin GPIO_PIN_10
+#define reset00_GPIO_Port GPIOC
+#define reset01_Pin GPIO_PIN_11
+#define reset01_GPIO_Port GPIOC
+#define reset02_Pin GPIO_PIN_12
+#define reset02_GPIO_Port GPIOC
+#define reset03_Pin GPIO_PIN_2
+#define reset03_GPIO_Port GPIOD
 #define TM1640_DIN_Pin GPIO_PIN_8
 #define TM1640_DIN_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

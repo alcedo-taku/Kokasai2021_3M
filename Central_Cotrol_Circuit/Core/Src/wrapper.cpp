@@ -61,6 +61,13 @@ constexpr std::array<GPIO,NUMBER_OF_TARGET> led_pin = {
 GPIO clockPin = {GPIOC, GPIO_PIN_9};
 GPIO dataPin  = {GPIOB, GPIO_PIN_8};
 
+constexpr std::array<GPIO,4> reset_button = {
+		GPIO{GPIOC, GPIO_PIN_10},
+		GPIO{GPIOC, GPIO_PIN_11},
+		GPIO{GPIOC, GPIO_PIN_12},
+		GPIO{GPIOD, GPIO_PIN_2},
+};
+
 /* Struct End */
 
 /* Variable Begin */
@@ -95,8 +102,9 @@ void loop(void){
 /* Function Body Begin */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if(htim == &htim17){ // 1200Hz
-    	static std::array<uint16_t,NUMBER_OF_TARGET> received_success_count;
 
+    	// 受信
+    	static std::array<uint16_t,NUMBER_OF_TARGET> received_success_count;
     	for(uint8_t i=0; i<NUMBER_OF_TARGET; i++){ // 的の数だけループ
     		if(received_success_count[i] != 0)
     			received_success_count[i]--; // 毎回、受信成功カウントを少しずつ減らす
@@ -108,7 +116,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
     	        	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
     	        		score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
-    	    			tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
+    	        		tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
 //						DFPlayerMini.next();
 //						DFPlayerMini.Send_cmd(0x01, 0x00, 0x00); // next
     	    			DFPlayerMini.play((rand()%2)+1);
@@ -126,7 +134,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
     	}
 
+    	// 得点のリセット
+    	for(uint8_t i=0; i<4; i++){
+    		if(HAL_GPIO_ReadPin(reset_button[i].GPIOx, reset_button[i].GPIO_Pin == GPIO_PIN_RESET)){
+    			score[i] = 0;
+    			tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
+    		}
+    	}
+
     	tm1640.setupDisplay(true, 7); // 毎回これやってあげないと、光らないみたい　仕様では光ると思うんだけどなぁ...
+
     }
     else if(htim == &htim16){ // 4Hz
     	// 的に当たった時、LEDを点滅させる

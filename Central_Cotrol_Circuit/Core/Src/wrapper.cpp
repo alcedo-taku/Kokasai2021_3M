@@ -112,15 +112,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
         	uart_by_gpio[i].call_with_timer_interrupt();
         	if(uart_by_gpio[i].is_successful_reception()){ // もし通信に成功したら
     			if(0 <= uart_by_gpio[i].get_data() && uart_by_gpio[i].get_data() <=3){ // 受信値が銃のIDだったら
-    				received_success_count[i] += 10*100; // 受信成功カウントを増やす
+    				received_success_count[i] += 10*50; // 受信成功カウントを増やす
 
     	        	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
     	        		score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
-    	        		tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
+    	        		tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3],0);
 //						DFPlayerMini.next();
 //						DFPlayerMini.Send_cmd(0x01, 0x00, 0x00); // next
     	    			DFPlayerMini.play((rand()%2)+1);
-    	    			led_blinking_count[i] = 0;
+    	    			received_success_count[i] = 0; // 受信成功カウントをリセット
+    	    			led_blinking_count[i] = 0; // LED点灯カウントをリセット→タイマー割込みで1回点灯する
     	        	}
     			}
         	}
@@ -138,7 +139,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     	for(uint8_t i=0; i<4; i++){
     		if(HAL_GPIO_ReadPin(reset_button[i].GPIOx, reset_button[i].GPIO_Pin == GPIO_PIN_RESET)){
     			score[i] = 0;
-    			tm1640.setDisplayToDecNumber(score[0]*100000 + score[1]*10000 + score[2]*100 + score[3],0);
+    			tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3],0);
     		}
     	}
 

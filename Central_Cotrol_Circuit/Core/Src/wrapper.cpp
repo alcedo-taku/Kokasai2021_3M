@@ -92,6 +92,7 @@ void init(void){
 	}
 	tm1640.init();
 //	tm1640.setDisplayToString("HALOHALOHALOHALO");
+	tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3], 0);
 	HAL_TIM_Base_Start_IT(&htim17);
 	HAL_TIM_Base_Start_IT(&htim16);
 }
@@ -116,7 +117,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
     	        	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
     	        		score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
-    	        		tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3],0);
+    	        		tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3], 0);
 //						DFPlayerMini.next();
 //						DFPlayerMini.Send_cmd(0x01, 0x00, 0x00); // next
     	    			DFPlayerMini.play((rand()%2)+1);
@@ -139,7 +140,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     	for(uint8_t i=0; i<4; i++){
     		if(HAL_GPIO_ReadPin(reset_button[i].GPIOx, reset_button[i].GPIO_Pin == GPIO_PIN_RESET)){
     			score[i] = 0;
-    			tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3],0);
+    			tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3], 0);
     		}
     	}
 

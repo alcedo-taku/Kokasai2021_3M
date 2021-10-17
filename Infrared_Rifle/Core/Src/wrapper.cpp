@@ -83,7 +83,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		// 発射処理
     	if(is_in_connecting){
 			static int8_t uart_step = -1;
-			static uint8_t number_of_rapid_fires = 40; // 1回に打つ回数
+			static uint8_t number_of_rapid_fires = 30; // 1回に打つ回数
 			if(uart_step == -1){ // スタートビット
 	#if !ENABLE_DEBUG
 				HAL_TIM_PWM_Start(&htim21, TIM_CHANNEL_1); // パルスを出す
@@ -126,11 +126,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 				if(number_of_bullets_remaining != 0)
 					number_of_bullets_remaining--;
 //				HAL_TIM_Base_Stop_IT(&htim2); // タイマー割込みを止める
+
+				// 1回に打つ弾数をカウント
 				if(number_of_rapid_fires != 0)
 					number_of_rapid_fires--;
 				if(number_of_rapid_fires == 0){
 					is_in_connecting = false;
-					number_of_rapid_fires = 40;
+					number_of_rapid_fires = 30;
 				}
 
 			}

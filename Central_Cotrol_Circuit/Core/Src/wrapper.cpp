@@ -145,7 +145,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     		}
     	}
 
-    	tm1640.setupDisplay(true, 7); // 毎回これやってあげないと、光らないみたい　仕様では光ると思うんだけどなぁ...
+    	tm1640.setupDisplay(true, 7); // ノイズによる輝度の変更を防ぐため
 
     }
     else if(htim == &htim16){ // 4Hz

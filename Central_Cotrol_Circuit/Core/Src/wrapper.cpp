@@ -111,19 +111,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     			received_success_count[i]--; // 毎回、受信成功カウントを少しずつ減らす
 
         	uart_by_gpio[i].call_with_timer_interrupt();
-        	if(uart_by_gpio[i].is_successful_reception()){ // もし通信に成功したら
-    			if(0 <= uart_by_gpio[i].get_data() && uart_by_gpio[i].get_data() <=3){ // 受信値が銃のIDだったら
-    				received_success_count[i] += 10*50; // 受信成功カウントを増やす
 
-    	        	if(10*1000 < received_success_count[i]){ // 受信成功カウントが一定値を超えたら
-    	        		score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
-    	        		tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3], 0);
+        	if(uart_by_gpio[i].is_successful_reception() // もし通信に成功したら
+        			&& (0 <= uart_by_gpio[i].get_data() && uart_by_gpio[i].get_data() <=3) ) // 受信値が銃のIDだったら
+        	{
+				received_success_count[i] += 500; // 受信成功カウントを増やす
+
+				if(500*25 <= received_success_count[i]){ // 受信成功カウントが一定値を超えたら
+					score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
+					tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3], 0);
 //						DFPlayerMini.next();
 //						DFPlayerMini.Send_cmd(0x01, 0x00, 0x00); // next
-    	    			DFPlayerMini.play((rand()%2)+1);
-    	    			received_success_count[i] = 0; // 受信成功カウントをリセット
-    	    			led_blinking_count[i] = 0; // LED点灯カウントをリセット→タイマー割込みで1回点灯する
-    	        	}
+					DFPlayerMini.play((rand()%2)+1);
+					received_success_count[i] = 0; // 受信成功カウントをリセット
+					led_blinking_count[i] = 0; // LED点灯カウントをリセット→タイマー割込みで1回点灯する
     			}
         	}
 

@@ -72,7 +72,7 @@ constexpr std::array<GPIO,4> reset_button = {
 
 /* Variable Begin */
 std::array<uint8_t,4> score;
-constexpr std::array<uint8_t,NUMBER_OF_TARGET> SCORE_OF_TARGET = {1,1,1,1,1,1,1,1,1,1,1}; // 各的の点数
+constexpr std::array<uint8_t,NUMBER_OF_TARGET> SCORE_OF_TARGET = {1,1,1,1,1,2,2,2,2,2,3,3,3,3,3}; // 各的の点数
 std::array<uint8_t,NUMBER_OF_TARGET> led_blinking_count; // LEDの点滅回数をカウント
 /* Variable End */
 

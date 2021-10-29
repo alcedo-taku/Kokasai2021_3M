@@ -33,7 +33,7 @@ GPIO indicator_LED[5] = {
 constexpr uint8_t rifle_id = 5;
 //const uint8_t number_of_high_bits = std::bitset<8>(rifle_id).count();
 constexpr uint8_t number_of_high_bits = 1;
-constexpr uint16_t NUMBER_OF_BULLETS = 33;
+constexpr uint16_t NUMBER_OF_BULLETS = 15;
 uint16_t number_of_bullets_remaining = NUMBER_OF_BULLETS;
 /* Variable End */
 

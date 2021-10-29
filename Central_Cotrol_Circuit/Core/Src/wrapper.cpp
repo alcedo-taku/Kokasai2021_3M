@@ -113,12 +113,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
         	uart_by_gpio[i].call_with_timer_interrupt();
 
         	if(uart_by_gpio[i].is_successful_reception() // もし通信に成功したら
-        			&& (0 <= uart_by_gpio[i].get_data() && uart_by_gpio[i].get_data() <=3) ) // 受信値が銃のIDだったら
+        			&& (1 <= uart_by_gpio[i].get_data() && uart_by_gpio[i].get_data() <=4) ) // 受信値が銃のIDだったら
         	{
 				received_success_count[i] += 500; // 受信成功カウントを増やす
 
 				if(500*25 <= received_success_count[i]){ // 受信成功カウントが一定値を超えたら
-					score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
+					if(uart_by_gpio[i].get_data() == 4){
+						score[0] += SCORE_OF_TARGET[i];
+					}else{
+						score[uart_by_gpio[i].get_data()] += SCORE_OF_TARGET[i]; // その時のIDに得点を入れる
+					}
 					tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3], 0);
 //						DFPlayerMini.next();
 //						DFPlayerMini.Send_cmd(0x01, 0x00, 0x00); // next

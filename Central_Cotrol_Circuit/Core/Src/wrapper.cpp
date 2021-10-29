@@ -139,7 +139,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
     	// 得点のリセット
     	for(uint8_t i=0; i<4; i++){
-    		if(HAL_GPIO_ReadPin(reset_button[i].GPIOx, reset_button[i].GPIO_Pin == GPIO_PIN_RESET)){
+    		if(HAL_GPIO_ReadPin(reset_button[i].GPIOx, reset_button[i].GPIO_Pin) == GPIO_PIN_RESET){
     			score[i] = 0;
     			tm1640.setDisplayToDecNumber(score[0]*1000000 + score[1]*10000 + score[2]*100 + score[3], 0);
     		}

@@ -30,10 +30,10 @@ GPIO indicator_LED[5] = {
 /* Struct End */
 
 /* Variable Begin */
-constexpr uint8_t rifle_id = 3;
+constexpr uint8_t rifle_id = 0;
 //const uint8_t number_of_high_bits = std::bitset<8>(rifle_id).count();
-constexpr uint8_t number_of_high_bits = 2;
-constexpr uint16_t NUMBER_OF_BULLETS = 1000;
+constexpr uint8_t number_of_high_bits = 0;
+constexpr uint16_t NUMBER_OF_BULLETS = 33;
 uint16_t number_of_bullets_remaining = NUMBER_OF_BULLETS;
 /* Variable End */
 
@@ -123,16 +123,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 	#endif
 				uart_step = -5; // 段階を初期化
-				if(number_of_bullets_remaining != 0)
-					number_of_bullets_remaining--;
 //				HAL_TIM_Base_Stop_IT(&htim2); // タイマー割込みを止める
 
 				// 1回に打つ弾数をカウント
 				if(number_of_rapid_fires != 0)
 					number_of_rapid_fires--;
-				if(number_of_rapid_fires == 0){
+				if(number_of_rapid_fires == 0){ // 射撃1回の最終回
 					is_in_connecting = false;
 					number_of_rapid_fires = 30;
+					if(number_of_bullets_remaining != 0)
+						number_of_bullets_remaining--;
 				}
 
 			}
